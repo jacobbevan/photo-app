@@ -1,0 +1,15 @@
+<div class="container">
+  <h1>Edit Album</h1>
+  <form novalidate (ngSubmit)="onSubmit()" [formGroup] = "albumDetails">
+    <div class="form-group">
+      <label for="albumName">Album Name</label>
+      <input placeholder="Enter" type="text" class="form-control input-lg" formControlName="albumName"/>
+      <label for="albumDesc">Description</label>
+      <textarea rows="3" placeholder="Enter a description of the album here" class="form-control" formControlName="albumDesc"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]= "!albumDetails.valid">Save</button>
+    <button type="button" (click)="onCancel()" class="btn btn-default">Cancel</button>
+  </form>
+  <h2>Photos in Album</h2>
+  <image-list [images] = "images" [large]="false" ></image-list>
+</div>

@@ -1,0 +1,22 @@
+<h1>{{album.name}}</h1>
+<blockquote>
+    <p class="lead">{{album.description}}</p>    
+    <footer>Added by Ziggy on 3 August 2017</footer>
+</blockquote>
+<div *ngIf="imageCount()>0" class="container" class="azb-img-ctr">
+    <div class="row">
+        <div class="col-sm-2 azb-img-pnl"><image-tile [showCaption]="false" [readOnly]="true" [imageSummary] = "tileSummary(0)"></image-tile></div>
+        <div class="col-sm-2 azb-img-pnl"><image-tile [showCaption]="false" [readOnly]="true" [imageSummary] = "tileSummary(1)"></image-tile></div>
+        <div class="col-sm-2 azb-img-pnl"><image-tile [showCaption]="false" [readOnly]="true" [imageSummary] = "tileSummary(2)"></image-tile></div>
+        <div class="col-sm-2 azb-img-pnl"><image-tile [showCaption]="false" [readOnly]="true" [imageSummary] = "tileSummary(3)"></image-tile></div>
+        <div class="col-sm-2 azb-img-pnl"><image-tile [showCaption]="false" [readOnly]="true" [imageSummary] = "tileSummary(4)"></image-tile></div>
+        <div class="col-sm-2 azb-img-pnl"><image-tile [showCaption]="false" [readOnly]="true" [imageSummary] = "tileSummary(5)"></image-tile></div>
+    </div>    
+</div>
+<p *ngIf="imageCount()==0">
+    There are no photos in this album
+</p>
+<button (click) = "viewAlbum()" type = "button" class="btn btn-default">View</button>
+<button (click) = "editAlbum()" type = "button" class="btn btn-default">Edit</button>
+<button (click) = "deleteAlbum()" type = "button" class="btn btn-danger">Delete</button>
+<hr>

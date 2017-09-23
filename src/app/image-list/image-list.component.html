@@ -1,0 +1,7 @@
+<div class="container">    
+  <div class="row" *ngFor="let i of rowIndexes" >
+    <div [ngClass]="colClass" *ngFor="let j of columnIndexes" >
+        <image-tile *ngIf="tileExists(i,j)" [imageSummary] = "tileSummary(i,j)" ></image-tile>
+    </div>
+  </div>
+</div>

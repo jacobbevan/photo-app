@@ -58,7 +58,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   onSearch() : void{
-    console.log("navigation:onSearch")
     this.filter = { albumName : this.searchText.value};
     this.showImages();
   }
@@ -72,6 +71,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
   
   showAlbums() : void {
     this.router.navigate(["albums"]);
+  }
+
+  showUpload() : void {
+    this.router.navigate(["upload"]);
   }
 
   createNewAlbum() : void {

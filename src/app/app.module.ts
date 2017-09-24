@@ -13,12 +13,14 @@ import { AlbumTileComponent } from './album-tile/album-tile.component';
 import { AlbumListComponent } from './album-list/album-list.component';
 import { AlbumEditComponent } from './album-edit/album-edit.component';
 import { ImageBrowserComponent } from './image-browser/image-browser.component';
+import { ImageUploadComponent } from './image-upload/image-upload.component';
 
 const routes: Routes = [
   {path : '', redirectTo: 'home', pathMatch: 'full'}, 
   {path : 'images', component: ImageBrowserComponent}, 
   {path: 'albums', component: AlbumListComponent},
-  {path: 'albums/edit', component: AlbumEditComponent}
+  {path: 'albums/edit', component: AlbumEditComponent},
+  {path: 'upload', component: ImageUploadComponent}  
 ]
 
 @NgModule({
@@ -30,7 +32,8 @@ const routes: Routes = [
     AlbumTileComponent,
     AlbumListComponent,
     AlbumEditComponent,
-    ImageBrowserComponent
+    ImageBrowserComponent,
+    ImageUploadComponent
   ],
   imports: [
     BrowserModule,

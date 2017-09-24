@@ -14,10 +14,10 @@ import { ImageService } from "../services/imageService";
 export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
 
   private subMultiEditModeEnabled : Subscription;
-  private subMultiSelect : Subscription;
   private subRemoved : Subscription;
   private subRemoveAll : Subscription;
   private multiEditMode : boolean = false;
+  private multiCheckState : boolean = false;
   private captionEditMode : boolean = false;  
   private imageClass : any;
   private isMouseOver : boolean = false;
@@ -26,23 +26,20 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   @Input('editVis') editVis : string = "hidden";
   @Input('imageSummary') imageSummary : ImageSummary;
   @Input('showCaption') showCaption : boolean = true;
-
-  private multiGroup : FormGroup;
-  private multiCheck  : FormControl;
   
   private captionGroup : FormGroup;
   private captionInput : FormControl;
 
   constructor(private imageService : ImageService, private multiSelect : MultiSelectService){
   }
-  
-  setImageClass(multiSelectMode : boolean, isSelected : boolean, isMouseOver : boolean) : void
+ 
+  setImageClass() : void
   {
-    console.log(this.multiCheck.value);
     this.imageClass = {
       "azb-img" : true,
-      "azb-img-highlight" : this.multiEditMode && this.isMouseOver,
-      "azb-img-unchecked" : this.multiEditMode && !this.multiCheck.value
+      "azb-img-highlight" : (this.multiEditMode && this.isMouseOver) && !this.readOnly,
+      "azb-img-unchecked" : (this.multiEditMode && !this.multiCheckState) && !this.readOnly,
+      "azb-img-checked" : (this.multiEditMode && this.multiCheckState) && !this.readOnly
     }
   } 
 
@@ -63,32 +60,44 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
     this.imageService.deleteImage(this.imageSummary.id);
   }
 
+  imageClick() : void {
+    if(this.multiEditMode){
+      this.multiCheckState = ! this.multiCheckState;
+      if(this.multiCheckState) {
+        this.multiSelect.addSelection(this.imageSummary);
+      }
+      else {
+        this.multiSelect.removeSelection(this.imageSummary); 
+      }
+      this.setImageClass();        
+    }      
+  }
+
   mouseOver() : void {
     this.editVis = "visible";
     this.isMouseOver = true;
-    this.setImageClass(this.multiEditMode, this.multiCheck.value, this.isMouseOver);
+    this.setImageClass();
   }
 
   mouseOut() : void {
     this.isMouseOver = false;
     this.editVis = "hidden";
 
-    this.setImageClass(this.multiEditMode, this.multiCheck.value, this.isMouseOver);
+    this.setImageClass();
   }
 
   ngOnInit() {
     this.initialiseMultiSelect();
-    this.initialiseCaptionInput();    
+    this.initialiseCaptionInput();
+    this.setImageClass();    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.multiCheck!=null){
-      this.multiCheck.setValue(this.multiSelect.Selected.find(i=>i.id==this.imageSummary.id)!=null);
-    }
-
+    this.multiCheckState = this.multiSelect.Selected.find(i=>i.id==this.imageSummary.id)!=null;
     if(this.captionInput!=null){
       this.captionInput.setValue(this.imageSummary.caption);
     }
+    this.setImageClass();
   }
   
   initialiseCaptionInput() : void {
@@ -111,40 +120,28 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   }
   
   initialiseMultiSelect() : void {
-    this.multiCheck = new FormControl("");
-    this.multiGroup = new FormGroup(
-      {
-        "multiCheck" : this.multiCheck
-      }
-    )
 
     this.subMultiEditModeEnabled = this.multiSelect.Enabled.subscribe(value => {
       this.multiEditMode = value;
-      this.setImageClass(this.multiEditMode, this.multiCheck.value, this.isMouseOver);
+      this.setImageClass();
     });
-    this.subRemoveAll = this.multiSelect.RemovedAll.subscribe(s=>this.multiCheck.setValue(false));
+
+    this.subRemoveAll = this.multiSelect.RemovedAll.subscribe(s=> {
+      this.multiCheckState = false;
+      this.setImageClass();
+    });
+    
     this.subRemoved  = this.multiSelect.Removed.subscribe(s=> {
       if(s.id == this.imageSummary.id){
-        s=>this.multiCheck.setValue(false);
+        s=>this.multiCheckState =false;
+        this.setImageClass();
       }
     });
 
-    this.subMultiSelect = this.multiGroup.valueChanges.subscribe(
-      value => {
-        if(value["multiCheck"] == true) {
-          this.multiSelect.addSelection(this.imageSummary);
-          //this.setImageClass(this.multiEditMode, this.multiCheck.value, this.isMouseOver);
-        }
-        else {
-          this.multiSelect.removeSelection(this.imageSummary);
-          //this.setImageClass(this.multiEditMode, this.multiCheck.value, this.isMouseOver);
-        }          
-      });
   }
 
   ngOnDestroy(): void {
     this.subMultiEditModeEnabled.unsubscribe();
-    this.subMultiSelect.unsubscribe();
     this.subRemoveAll.unsubscribe();
     this.subRemoved.unsubscribe();
   }

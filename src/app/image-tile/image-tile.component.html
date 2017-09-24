@@ -1,15 +1,8 @@
 <div on-mouseover = "mouseOver()" on-mouseout="mouseOut()">
-    <div style="position: relative"> 
+    <div style="position: relative" (click)="imageClick()"> 
         <div style="position: absolute;left:8px;top:8px;">                
             <div *ngIf="!readOnly">
                 <div class="form-group" [ngSwitch]="multiEditMode" style="float:right">
-                    <div class="form-group" *ngSwitchCase='true' novalidate [formGroup]="multiGroup">
-                        <div class="checkbox inline">
-                            <label class="checkbox">
-                                <input formControlName="multiCheck" type="checkbox">
-                            </label>
-                        </div>
-                    </div>
 
                     <div *ngSwitchCase='false' class="btn-group" role="group" aria-label="..." style="float:right">
                         <button title="View" [ngStyle]="{'visibility': getEditVis()}" (click)="view()" type="button" class="btn btn-default btn-sm">

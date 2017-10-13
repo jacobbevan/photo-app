@@ -88,6 +88,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     for(let img of this.multiSelect.Selected){
       this.imageService.deleteImage(img.id);      
     }
+    this.multiSelect.resetSelection();
   }
 
   initialiseMultiSelect() : void {

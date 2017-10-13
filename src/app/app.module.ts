@@ -14,6 +14,7 @@ import { AlbumListComponent } from './album-list/album-list.component';
 import { AlbumEditComponent } from './album-edit/album-edit.component';
 import { ImageBrowserComponent } from './image-browser/image-browser.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
+import { UploadService } from "./services/uploadService";
 
 const routes: Routes = [
   {path : '', redirectTo: 'home', pathMatch: 'full'}, 
@@ -43,7 +44,8 @@ const routes: Routes = [
   ],
   providers: [
     ImageService,
-    MultiSelectService
+    MultiSelectService,
+    UploadService
   ],
   bootstrap: [AppComponent]
 })

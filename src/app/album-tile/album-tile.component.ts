@@ -23,7 +23,7 @@ export class AlbumTileComponent implements OnInit {
   constructor(private router : Router, private imageService : ImageService) { }
 
   ngOnInit() {
-    this.images = this.imageService.getImageList({albumName : this.album.name});
+    this.imageService.getImageList({albumName : this.album.name}).then(res=> this.images = res);
     console.log(this.images);
   }
 

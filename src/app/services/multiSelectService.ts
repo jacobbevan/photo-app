@@ -27,7 +27,6 @@ export class MultiSelectService
     }
 
     resetSelection() : void {
-        console.log("reset seelction");
         this.Selected = [];
         this.RemovedAll.next(new Object());
     }

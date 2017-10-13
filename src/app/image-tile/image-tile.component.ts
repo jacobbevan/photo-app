@@ -19,9 +19,9 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   private multiEditMode : boolean = false;
   private multiCheckState : boolean = false;
   private captionEditMode : boolean = false;  
-  private imageClass : any;
   private isMouseOver : boolean = false;
-
+  private imageClass : any; //TODO fix up typing here
+  
   @Input('readOnly') readOnly : boolean = false;
   @Input('editVis') editVis : string = "hidden";
   @Input('imageSummary') imageSummary : ImageSummary;

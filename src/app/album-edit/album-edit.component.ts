@@ -28,7 +28,7 @@ export class AlbumEditComponent implements OnInit {
     this.route.params.subscribe(p=>{
       if(p["albumId"]){
           this.album = this.imageService.getAlbum(p["albumId"]);
-          this.images = this.imageService.getImageList({albumId : this.album.id} );
+          this.imageService.getImageList({albumId : this.album.id}).then(res=>this.images);
           console.log("edit album" + this.album.name )
           this.albumName.setValue(this.album.name);
           this.albumDesc.setValue(this.album.description);

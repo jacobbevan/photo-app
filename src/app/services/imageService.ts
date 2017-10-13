@@ -3,7 +3,11 @@ import {AlbumSummary} from "../model/albumSummary";
 import {FilterCriteria} from "../model/filterCriteria"
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import { Headers, Http, Response } from '@angular/http';
+import { Injectable } from "@angular/core";
+import 'rxjs/add/operator/toPromise';
 
+@Injectable()
 export class ImageService
 {
     private images : ImageSummary[];
@@ -17,7 +21,7 @@ export class ImageService
     AlbumDeleted : Subject<AlbumSummary> = new Subject<AlbumSummary>();
     AlbumUpdated  : Subject<AlbumSummary> = new Subject<AlbumSummary>();
 
-    constructor() {
+    constructor(private http: Http) {
         
         this.images = [
             new ImageSummary("k1", "Ramsay Eating"),
@@ -101,32 +105,44 @@ export class ImageService
         return this.albums;
     }
 
-    getImageList(filter : FilterCriteria) : ImageSummary[]
+    getImageList(filter : FilterCriteria) : Promise<ImageSummary[]>
     {
+        let promise = new Promise<ImageSummary[]>((resolve, reject) => {
+            this.http
+                .get("http://localhost:5000/api/images/")
+                .toPromise()
+                .then(res =>{
+                    console.log(res.json());
+                    let results : ImageSummary[] = JSON.parse(res.text());
+                    resolve(results);
+                });
+        });
+
+        return promise;
 
 
-        if(filter.albumName != null){
-            var album = this.albums.find(a=>a.name.toLowerCase() == filter.albumName.toLowerCase())
+        // if(filter.albumName != null){
+        //     var album = this.albums.find(a=>a.name.toLowerCase() == filter.albumName.toLowerCase())
 
-            let ret : ImageSummary[] = [];
-            for(let id of album.imageIds) {
-                var imgSum = this.images.find(i=>i.id == id);
-                ret.push(imgSum);
-            }
-            return ret;
-        }        
+        //     let ret : ImageSummary[] = [];
+        //     for(let id of album.imageIds) {
+        //         var imgSum = this.images.find(i=>i.id == id);
+        //         ret.push(imgSum);
+        //     }
+        //     return ret;
+        // }        
 
-        if(filter.albumId != null){
-            console.log("search for images by album id");
-            var album = this.albums.find(a=>a.id == filter.albumId)
+        // if(filter.albumId != null){
+        //     console.log("search for images by album id");
+        //     var album = this.albums.find(a=>a.id == filter.albumId)
 
-            let ret : ImageSummary[] = [];
-            for(let id of album.imageIds) {
-                var imgSum = this.images.find(i=>i.id == id);
-                ret.push(imgSum);
-            }
-            return ret;
-        }        
-        return this.images;
+        //     let ret : ImageSummary[] = [];
+        //     for(let id of album.imageIds) {
+        //         var imgSum = this.images.find(i=>i.id == id);
+        //         ret.push(imgSum);
+        //     }
+        //     return ret;
+        // }        
+        // return this.images;
     }
 }

@@ -20,7 +20,7 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   private multiEditMode : boolean = false;
   private captionEditMode : boolean = false;  
   private imageClass : string = "azb-img";
-  
+
   @Input('readOnly') readOnly : boolean = false;
   @Input('editVis') editVis : string = "hidden";
   @Input('editMode') editMode : boolean = false;

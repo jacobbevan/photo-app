@@ -2,6 +2,8 @@ export class ImageSummary {
 
     id : string;
     caption : string;
+    thumbnail : URL;
+    fullImage : URL;
     created : Date;
     updated : Date;
        

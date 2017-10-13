@@ -35,7 +35,7 @@ export class ImageBrowserComponent implements OnInit {
   }
 
   public updateImageList = () => {
-    this.images = this.imageService.getImageList(this.filter);     
+    this.imageService.getImageList(this.filter).then(res=>this.images = res);     
   }
 
   ngOnInit() {

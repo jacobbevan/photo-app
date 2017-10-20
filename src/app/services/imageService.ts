@@ -74,7 +74,7 @@ export class ImageService
     {
         let album = this.albums.find(s=>s.id === id);
         this.albums = this.albums.filter(s=>s.id != id);
-        console.log("doing the on nexxt thing");
+        console.log("doing the on next thing");
         this.AlbumDeleted.next(album);
     }
 

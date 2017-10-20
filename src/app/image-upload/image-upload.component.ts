@@ -20,41 +20,6 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subUpload = this.uploadService.Active.subscribe(u=> this.uploads = u);
-
-    let upload : UploadItem =         {
-      id : "456",
-      status : UploadStatus.Ongoing,
-      file : new File(["some content"],"DOC287.PNG"),
-      dataUrl : ""    
-    };
-
-
-    this.testUpload = {
-      id : "123",
-      status : UploadStatus.Failed,
-      items : [
-        {
-          id : "456",
-          file : new File(["some content"],"DOC287.PNG"),    
-          status : UploadStatus.Ongoing
-        },
-        {
-          id : "457",
-          file : new File(["some content"],"DOC287.PNG"),    
-          status : UploadStatus.Completed
-        },
-        {
-          id : "458",
-          file : new File(["some content"],"DOC287.PNG"),    
-          status : UploadStatus.NotStarted
-        },
-        {
-          id : "458",
-          file : new File(["some content"],"DOC287.PNG"),    
-          status : UploadStatus.Failed
-        },
-      ]
-    };
   }
 
   ngOnDestroy(): void {

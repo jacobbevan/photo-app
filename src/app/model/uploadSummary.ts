@@ -1,3 +1,5 @@
+import { ImageSummary } from "./imageSummary";
+
 export enum UploadStatus {
     NotStarted,
     Ongoing,
@@ -8,8 +10,8 @@ export enum UploadStatus {
 export class UploadItem {
     public id : string;
     public status : UploadStatus;
-    public file : File;
-    public dataUrl? : string;
+    public file : File;   
+    public summary? : ImageSummary;
 }
 
 export class UploadSummary {
@@ -27,7 +29,6 @@ export class UploadSummary {
                 file : file,
                 status : UploadStatus.NotStarted,
                 id : "abc",
-                dataUrl : ""
             }
             items.push(item);
         }

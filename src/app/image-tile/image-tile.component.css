@@ -15,7 +15,8 @@
 }
 
 .azb-img-unchecked {
-    filter:grayscale(60%);
+    filter:grayscale(80%);
+    opacity: 0.5;    
 }
 
 .azb-img-checked {

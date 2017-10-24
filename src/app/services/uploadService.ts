@@ -19,11 +19,15 @@ export class UploadService
     constructor(private http: Http) {}
 
     public cancelUpload(upload : UploadSummary) : void {
+        upload.isCancelled = true;
+        this.items = this.items.filter(i=>i != upload);
+        this.Active.next(this.items);
 
     }
 
     public removeUpload(upload : UploadSummary) : void {
-
+        this.items = this.items.filter(i=>i != upload);
+        this.Active.next(this.items);
     }
 
     public retryUpload(upload : UploadSummary) : void {
@@ -31,7 +35,7 @@ export class UploadService
     }
 
 
-    private postImage2(http: Http, summary : UploadSummary, index : number) : void  {
+    private postImage(http: Http, summary : UploadSummary, index : number) : void  {
 
         let input = new FormData();
 
@@ -46,6 +50,7 @@ export class UploadService
             (res ) => {
                 item.status = UploadStatus.Completed;
                 item.summary = JSON.parse(res.text());
+                console.log(item.summary);
                 this.UpdateStatus(summary);
             },
             (err)=> {
@@ -55,8 +60,8 @@ export class UploadService
             })
         .then(
             () => {
-                if(index + 1 < summary.items.length) {
-                    this.postImage2(http, summary, index+1);
+                if(!summary.isCancelled && (index + 1 < summary.items.length)) {
+                    this.postImage(http, summary, index+1);
                 }
             },
             (err)=> {
@@ -64,37 +69,9 @@ export class UploadService
             });
     }
 
-
-
-    private postImage(http: Http, summary : UploadSummary, item : UploadItem) : void {
-
-        let input = new FormData();
-        input.append("file", item.file);
-        input.append("folder", "folder");
-
-        http.post("http://localhost:5000/api", input).toPromise().then(
-            (res ) => {
-                item.status = UploadStatus.Completed;
-                item.summary = JSON.parse(res.text());
-                this.UpdateStatus(summary);
-            },
-            (err)=> {
-                item.status = UploadStatus.Failed;
-                "Error " + console.log(err);
-                this.UpdateStatus(summary);
-            });
-        
-        item.status = UploadStatus.Ongoing;
-        this.UpdateStatus(summary);        
-    }
-
     public startUpload(upload : UploadSummary) : void {
-
-        // for(let item of upload.items){
-        //     this.postImage(this.http, upload, item);
-        // }
         
-        this.postImage2(this.http, upload, 0);
+        this.postImage(this.http, upload, 0);
         this.items.push(upload);
         this.Added.next(upload);
         this.Active.next(this.items);

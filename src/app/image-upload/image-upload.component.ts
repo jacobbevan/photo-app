@@ -15,7 +15,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
   private newUpload : UploadSummary;
   private uploads : UploadSummary[];
   private subUpload : Subscription;
-  private testUpload : UploadSummary;
+
   constructor(private uploadService : UploadService) { }
 
   ngOnInit() {
@@ -37,9 +37,21 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
     
   }
 
+  onClose(summary : UploadSummary) : void {
+    this.uploadService.removeUpload(summary);
+  }
+  
+  onRetry(summary : UploadSummary) : void {
+    this.uploadService.retryUpload(summary);
+  }
+  
+  onCancel(summary : UploadSummary) : void {
+    this.uploadService.cancelUpload(summary);
+  }
+
   onSubmit(f : NgForm){
     this.uploadService.startUpload(this.newUpload);
     f.reset();
-
+    this.newUpload = null;
   }
 }

@@ -8,16 +8,15 @@ export enum UploadStatus {
 }
 
 export class UploadItem {
-    public id : string;
     public status : UploadStatus;
     public file : File;   
     public summary? : ImageSummary;
 }
 
 export class UploadSummary {
-    public id : string;
     public status : UploadStatus;
     public items : UploadItem[];
+    isCancelled: boolean = false;
 
     public static createNewUpload(files : FileList) : UploadSummary {
         
@@ -28,15 +27,14 @@ export class UploadSummary {
             let item : UploadItem = {
                 file : file,
                 status : UploadStatus.NotStarted,
-                id : "abc",
             }
             items.push(item);
         }
 
         return {
-            id : "efg",
             status : UploadStatus.NotStarted,
-            items : items
+            items : items,
+            isCancelled : false
         };
     }
 }

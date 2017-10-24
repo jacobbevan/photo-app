@@ -13,9 +13,9 @@
       {{upload.items.length}} files, @ 21:01:22 3 May 2017
     </div>
     <div class="panel-body">
-        <button *ngIf="upload.status==1"  type="button" class="btn btn-danger" [disabled]= "newUpload == null"><span class="glyphicon glyphicon-stop"></span> Cancel</button>
-        <button *ngIf="upload.status==2" type="button" class="btn btn-success" [disabled]= "newUpload == null"><span class="glyphicon glyphicon-close"></span> Close</button>
-        <button *ngIf="upload.status==3" type="button" class="btn btn-warning" [disabled]= "newUpload == null"><span class="glyphicon glyphicon-refresh"></span> Retry</button>
+        <button *ngIf="upload.status==1" (click)="onCancel(upload)" type="button" class="btn btn-danger" ><span class="glyphicon glyphicon-stop"></span> Cancel</button>
+        <button *ngIf="upload.status==2" (click)="onClose(upload)" type="button" class="btn btn-success" ><span class="glyphicon glyphicon-close"></span> Close</button>
+        <button *ngIf="upload.status==3" (click)="onRetry(upload)"type="button" class="btn btn-warning" ><span class="glyphicon glyphicon-refresh"></span> Retry</button>
         <table class="table">
         <thead>
           <tr>
@@ -33,8 +33,8 @@
               <div *ngSwitchCase="uploadStatus.Completed"><span class="glyphicon glyphicon-ok-circle"></span> Completed</div>
             </td>
             <td>
-                <img class="thumb"
-                src="{{uploadItem.dataUrl}}"
+                <img class="thumb"                
+                [src]="'http://localhost:5000/' + uploadItem.summary?.thumbNail"
                 />                              
             </td>
             <td>{{uploadItem.file.name}}</td>

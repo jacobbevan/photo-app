@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ImageService } from "../services/imageService";
 import { AlbumSummary } from "../model/albumSummary";
 import { ImageSummary } from "../model/imageSummary";
-import { FilterCriteria } from "../model/filterCriteria";
 import { Router } from "@angular/router";
 
 @Component({
@@ -23,8 +22,7 @@ export class AlbumTileComponent implements OnInit {
   constructor(private router : Router, private imageService : ImageService) { }
 
   ngOnInit() {
-    this.imageService.getImageList({albumName : this.album.name}).then(res=> this.images = res);
-    console.log(this.images);
+    this.imageService.getImageList({albumId : this.album.id}).then(res=> this.images = res);
   }
 
   tileSummary(index : number) : ImageSummary {

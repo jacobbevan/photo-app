@@ -20,7 +20,8 @@ export class AlbumListComponent implements OnInit, OnDestroy {
   
   public updateAlbumList = () =>
   {
-    this.albums = this.imageService.getAlbumList(new FilterCriteria())
+    //TODO error handling
+    this.imageService.getAlbumList(new FilterCriteria()).then(res=>this.albums = res);
   }
   
   constructor(private route: ActivatedRoute, private imageService : ImageService) {

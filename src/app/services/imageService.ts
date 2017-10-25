@@ -100,9 +100,20 @@ export class ImageService
         return this.images.find(x=>x.id==id);
     }
 
-    getAlbumList(filter : FilterCriteria) : AlbumSummary[]
+    getAlbumList(filter : FilterCriteria) : Promise<AlbumSummary[]>
     {
-        return this.albums;
+        let promise = new Promise<AlbumSummary[]>((resolve, reject) => {
+            this.http
+                .get("http://localhost:5000/api/albums/")
+                .toPromise()
+                .then(res =>{
+                    console.log(res.json());
+                    let results : AlbumSummary[] = JSON.parse(res.text());
+                    resolve(results);
+                });
+        });
+
+        return promise;
     }
 
     getImageList(filter : FilterCriteria) : Promise<ImageSummary[]>
@@ -119,30 +130,5 @@ export class ImageService
         });
 
         return promise;
-
-
-        // if(filter.albumName != null){
-        //     var album = this.albums.find(a=>a.name.toLowerCase() == filter.albumName.toLowerCase())
-
-        //     let ret : ImageSummary[] = [];
-        //     for(let id of album.imageIds) {
-        //         var imgSum = this.images.find(i=>i.id == id);
-        //         ret.push(imgSum);
-        //     }
-        //     return ret;
-        // }        
-
-        // if(filter.albumId != null){
-        //     console.log("search for images by album id");
-        //     var album = this.albums.find(a=>a.id == filter.albumId)
-
-        //     let ret : ImageSummary[] = [];
-        //     for(let id of album.imageIds) {
-        //         var imgSum = this.images.find(i=>i.id == id);
-        //         ret.push(imgSum);
-        //     }
-        //     return ret;
-        // }        
-        // return this.images;
     }
 }

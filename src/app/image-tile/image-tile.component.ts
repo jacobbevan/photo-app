@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { ImageSummary } from '../model/imageSummary';
-import { MultiSelectService } from "../services/multiSelectService";
-import { Subscription } from "rxjs/Subscription";
-import { FormGroup, FormControl } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router/router";
-import { ImageService } from "../services/imageService";
+import { MultiSelectService } from '../services/multiSelectService';
+import { Subscription } from 'rxjs/Subscription';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router/router';
+import { ImageService } from '../services/imageService';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -14,35 +14,34 @@ import { environment } from '../../environments/environment';
 })
 export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
 
-  private subMultiEditModeEnabled : Subscription;
-  private subRemoved : Subscription;
-  private subRemoveAll : Subscription;
-  private multiEditMode : boolean = false;
-  private multiCheckState : boolean = false;
-  private isMouseOver : boolean = false;
-  
-  imageClass : any; //TODO fix up typing here
-  captionEditMode : boolean = false;  
-  
-  @Input('readOnly') readOnly : boolean = false;
-  @Input('editVis') editVis : string = "hidden";
-  @Input('imageSummary') imageSummary : ImageSummary;
-  @Input('showCaption') showCaption : boolean = true;
-  
-  captionGroup : FormGroup;
-  private captionInput : FormControl;
+  private subMultiEditModeEnabled: Subscription;
+  private subRemoved: Subscription;
+  private subRemoveAll: Subscription;
+  private multiEditMode = false;
+  private multiCheckState = false;
+  private isMouseOver = false;
 
-  constructor(private imageService : ImageService, private multiSelect : MultiSelectService){
+  imageClass: any; // TODO fix up typing here
+  captionEditMode = false;
+
+  @Input('readOnly') readOnly = false;
+  @Input('editVis') editVis = 'hidden';
+  @Input('imageSummary') imageSummary: ImageSummary;
+  @Input('showCaption') showCaption: true;
+
+  captionGroup: FormGroup;
+  private captionInput: FormControl;
+
+  constructor(private imageService: ImageService, private multiSelect: MultiSelectService) {
   }
- 
-  setImageClass() : void
-  {
+
+  setImageClass(): void {
     this.imageClass = {
-      "azb-img" : true,
-      "azb-img-highlight" : (this.multiEditMode && this.isMouseOver) && !this.readOnly,
-      "azb-img-unchecked" : (this.multiEditMode && !this.multiCheckState) && !this.readOnly,
-      "azb-img-checked" : (this.multiEditMode && this.multiCheckState) && !this.readOnly
-    }
+      'azb-img' : true,
+      'azb-img-highlight' : (this.multiEditMode && this.isMouseOver) && !this.readOnly,
+      'azb-img-unchecked' : (this.multiEditMode && !this.multiCheckState) && !this.readOnly,
+      'azb-img-checked' : (this.multiEditMode && this.multiCheckState) && !this.readOnly
+    };
   }
 
   getThumbnailURL(): URL {
@@ -57,41 +56,40 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
     return this.editVis;
   }
 
-  view() : void {
-    console.log("view clicked");
+  view(): void {
+    console.log('view clicked');
   }
 
-  editCaption(el : HTMLElement) : void {
+  editCaption(el: HTMLElement): void {
     this.captionEditMode = true;
     el.focus();
   }
 
-  delete() : void {
+  delete(): void {
     this.imageService.deleteImage(this.imageSummary.id);
   }
 
-  imageClick() : void {
-    if(this.multiEditMode){
+  imageClick(): void {
+    if (this.multiEditMode) {
       this.multiCheckState = ! this.multiCheckState;
-      if(this.multiCheckState) {
+      if (this.multiCheckState) {
         this.multiSelect.addSelection(this.imageSummary);
+      } else {
+        this.multiSelect.removeSelection(this.imageSummary);
       }
-      else {
-        this.multiSelect.removeSelection(this.imageSummary); 
-      }
-      this.setImageClass();        
-    }      
+      this.setImageClass();
+    }
   }
 
-  mouseOver() : void {
-    this.editVis = "visible";
+  mouseOver(): void {
+    this.editVis = 'visible';
     this.isMouseOver = true;
     this.setImageClass();
   }
 
-  mouseOut() : void {
+  mouseOut(): void {
     this.isMouseOver = false;
-    this.editVis = "hidden";
+    this.editVis = 'hidden';
 
     this.setImageClass();
   }
@@ -99,51 +97,51 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit() {
     this.initialiseMultiSelect();
     this.initialiseCaptionInput();
-    this.setImageClass();    
+    this.setImageClass();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.multiCheckState = this.multiSelect.Selected.find(i=>i.id==this.imageSummary.id)!=null;
-    if(this.captionInput!=null){
+    this.multiCheckState = this.multiSelect.Selected.find(i => i.id === this.imageSummary.id) != null;
+    if (this.captionInput != null) {
       this.captionInput.setValue(this.imageSummary.caption);
     }
     this.setImageClass();
   }
-  
-  initialiseCaptionInput() : void {
+
+  initialiseCaptionInput(): void {
     this.captionInput  = new FormControl(this.imageSummary.caption);
     this.captionGroup = new FormGroup(
       {
-        "caption" : this.captionInput
+        'caption' : this.captionInput
       }
-    )
+    );
   }
 
-  cancelCaptionChange() : void {
+  cancelCaptionChange(): void {
     this.captionInput.setValue(this.imageSummary.caption);
-    this.captionEditMode = false;    
+    this.captionEditMode = false;
   }
 
-  submitCaptionChange() : void {
+  submitCaptionChange(): void {
     this.imageSummary.caption = this.captionInput.value;
     this.captionEditMode = false;
   }
-  
-  initialiseMultiSelect() : void {
+
+  initialiseMultiSelect(): void {
 
     this.subMultiEditModeEnabled = this.multiSelect.Enabled.subscribe(value => {
       this.multiEditMode = value;
       this.setImageClass();
     });
 
-    this.subRemoveAll = this.multiSelect.RemovedAll.subscribe(s=> {
+    this.subRemoveAll = this.multiSelect.RemovedAll.subscribe(s => {
       this.multiCheckState = false;
       this.setImageClass();
     });
-    
-    this.subRemoved  = this.multiSelect.Removed.subscribe(s=> {
-      if(s.id == this.imageSummary.id){
-        s=>this.multiCheckState =false;
+
+    this.subRemoved  = this.multiSelect.Removed.subscribe(s => {
+      if (s.id === this.imageSummary.id) {
+        this.multiCheckState = false;
         this.setImageClass();
       }
     });
@@ -155,6 +153,4 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
     this.subRemoveAll.unsubscribe();
     this.subRemoved.unsubscribe();
   }
-  
-
 }

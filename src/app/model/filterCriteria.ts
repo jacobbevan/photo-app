@@ -1,5 +1,5 @@
-export class FilterCriteria{
-    textSearch? : string;
-    albumId? : string;
-    albumName? : string;
+export class FilterCriteria {
+    textSearch?: string;
+    albumId?: string;
+    albumName?: string;
 }

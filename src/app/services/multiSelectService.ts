@@ -4,29 +4,28 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
-export class MultiSelectService
-{
-    Selected : ImageSummary[] = [];
-    Enabled : BehaviorSubject<boolean> = new BehaviorSubject(false);
-    Added : Subject<ImageSummary> = new Subject<ImageSummary>();
-    Removed : Subject<ImageSummary> = new Subject<ImageSummary>();
-    RemovedAll : Subject<any> = new Subject<any>();
+export class MultiSelectService {
+    Selected: ImageSummary[] = [];
+    Enabled: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    Added: Subject<ImageSummary> = new Subject<ImageSummary>();
+    Removed: Subject<ImageSummary> = new Subject<ImageSummary>();
+    RemovedAll: Subject<any> = new Subject<any>();
 
-    setEnabled(enabled : boolean) {
+    setEnabled(enabled: boolean) {
         this.Enabled.next(enabled);
     }
-    
-    addSelection(item : ImageSummary) : void {
+
+    addSelection(item: ImageSummary): void {
         this.Selected.push(item);
         this.Added.next(item);
     }
 
-    removeSelection(item : ImageSummary) : void {
-        this.Selected = this.Selected.filter(s=>s.id != item.id);
+    removeSelection(item: ImageSummary): void {
+        this.Selected = this.Selected.filter(s => s.id !== item.id);
         this.Removed.next(item);
     }
 
-    resetSelection() : void {
+    resetSelection(): void {
         this.Selected = [];
         this.RemovedAll.next(new Object());
     }

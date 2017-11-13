@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ImageService } from "../services/imageService";
-import { AlbumSummary } from "../model/albumSummary";
-import { ImageSummary } from "../model/imageSummary";
-import { Router } from "@angular/router";
+import { ImageService } from '../services/imageService';
+import { AlbumSummary } from '../model/albumSummary';
+import { ImageSummary } from '../model/imageSummary';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'album-tile',
@@ -11,15 +11,14 @@ import { Router } from "@angular/router";
 })
 export class AlbumTileComponent implements OnInit {
 
-  @Input("album") album : AlbumSummary;
-  private images : ImageSummary[];
+  @Input('album') album: AlbumSummary;
+  private images: ImageSummary[];
 
-  imageCount() : number
-  {
+  imageCount(): number {
     return this.images.length;
   }
-  
-  constructor(private router : Router, private imageService : ImageService) { }
+
+  constructor(private router: Router, private imageService: ImageService) { }
 
   ngOnInit() {
     this.imageService.getImageList({albumId : this.album.id}).then(res => {
@@ -27,22 +26,22 @@ export class AlbumTileComponent implements OnInit {
     });
   }
 
-  tileSummary(index : number) : ImageSummary {
+  tileSummary(index: number): ImageSummary {
     return this.images[index % this.images.length];
   }
 
-  editAlbum() : void {
+  editAlbum(): void {
     console.log(this.album);
-    this.router.navigate(["albums/edit", {
-      albumId : this.album.id 
+    this.router.navigate(['albums/edit', {
+      albumId : this.album.id
     }]);
   }
 
-  viewAlbum() : void {
-    console.log("not yet implemented");
+  viewAlbum(): void {
+    console.log('not yet implemented');
   }
 
-  deleteAlbum() : void {
+  deleteAlbum(): void {
     this.imageService.deleteAlbum(this.album.id);
   }
 

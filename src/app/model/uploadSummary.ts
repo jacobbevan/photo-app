@@ -1,4 +1,4 @@
-import { ImageSummary } from "./imageSummary";
+import { ImageSummary } from './imageSummary';
 
 export enum UploadStatus {
     NotStarted,
@@ -8,26 +8,26 @@ export enum UploadStatus {
 }
 
 export class UploadItem {
-    public status : UploadStatus;
-    public file : File;   
-    public summary? : ImageSummary;
+    public status: UploadStatus;
+    public file: File;
+    public summary?: ImageSummary;
 }
 
 export class UploadSummary {
-    public status : UploadStatus;
-    public items : UploadItem[];
-    isCancelled: boolean = false;
+    public status: UploadStatus;
+    public items: UploadItem[];
+    isCancelled = false;
 
-    public static createNewUpload(files : FileList) : UploadSummary {
-        
-        let items : UploadItem[] = [];
-        
-        for(let i = 0; i < files.length; i++){
-            let file = files[i];
-            let item : UploadItem = {
+    public static createNewUpload(files: FileList): UploadSummary {
+
+        const items: UploadItem[] = [];
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const  item: UploadItem = {
                 file : file,
-                status : UploadStatus.NotStarted,
-            }
+                status : UploadStatus.NotStarted
+            };
             items.push(item);
         }
 

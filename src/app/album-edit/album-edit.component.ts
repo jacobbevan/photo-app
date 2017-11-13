@@ -5,7 +5,6 @@ import { ImageService } from "../services/imageService";
 import { ActivatedRoute } from "@angular/router";
 import { AlbumSummary } from "../model/albumSummary";
 import { ImageSummary } from "../model/imageSummary";
-import { FilterCriteria } from "../model/filterCriteria";
 
 @Component({
   selector: 'album-edit',
@@ -15,8 +14,8 @@ import { FilterCriteria } from "../model/filterCriteria";
 export class AlbumEditComponent implements OnInit {
 
   private album : AlbumSummary;
-  private images : ImageSummary[];
 
+  images : ImageSummary[];
   albumDetails : FormGroup;
   albumName : FormControl;
   albumDesc : FormControl;
@@ -27,11 +26,12 @@ export class AlbumEditComponent implements OnInit {
     this.initForm();
     this.route.params.subscribe(p=>{
       if(p["albumId"]){
-          this.album = this.imageService.getAlbum(p["albumId"]);
-          this.imageService.getImageList({albumId : this.album.id}).then(res=>this.images);
-          console.log("edit album" + this.album.name )
-          this.albumName.setValue(this.album.name);
-          this.albumDesc.setValue(this.album.description);
+          this.imageService.getAlbum(p["albumId"]).then(album => {
+            this.album = album;
+            this.imageService.getImageList({albumId : album.id}).then(res => this.images = res);
+            this.albumName.setValue(this.album.name);
+            this.albumDesc.setValue(this.album.description);
+            });
         }      
       }
     );
@@ -51,7 +51,7 @@ export class AlbumEditComponent implements OnInit {
   onSubmit() : void {
     this.album.name = this.albumName.value;
     this.album.description = this.albumDesc.value;
-    this.imageService.saveAlbum(this.album);
+    this.imageService.updateAlbum(this.album);
     this.location.back();
   }
 

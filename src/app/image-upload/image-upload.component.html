@@ -34,7 +34,7 @@
             </td>
             <td>
                 <img class="thumb"                
-                [src]="'http://localhost:5000/' + uploadItem.summary?.thumbNail"
+                [src]="getThumbnailURL(uploadItem)"
                 />                              
             </td>
             <td>{{uploadItem.file.name}}</td>

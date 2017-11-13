@@ -1,114 +1,88 @@
-import {ImageSummary} from "../model/imageSummary";
-import {AlbumSummary} from "../model/albumSummary";
-import {FilterCriteria} from "../model/filterCriteria"
+import {ImageSummary} from '../model/imageSummary';
+import {AlbumSummary} from '../model/albumSummary';
+import {FilterCriteria} from '../model/filterCriteria';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import { Headers, Http, Response } from '@angular/http';
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
+import { environment } from '../../environments/environment';
 
 @Injectable()
-export class ImageService
-{
-    private images : ImageSummary[];
-    private albums : AlbumSummary[];
+export class ImageService {
 
-    ImageAdded : Subject<ImageSummary> = new Subject<ImageSummary>();
-    ImageDeleted : Subject<ImageSummary> = new Subject<ImageSummary>();
-    ImageUpdated  : Subject<ImageSummary> = new Subject<ImageSummary>();
+    ImageAdded: Subject<ImageSummary> = new Subject<ImageSummary>();
+    ImageDeleted: Subject<string> = new Subject<string>();
+    ImageUpdated: Subject<ImageSummary> = new Subject<ImageSummary>();
 
-    AlbumAdded : Subject<AlbumSummary> = new Subject<AlbumSummary>();
-    AlbumDeleted : Subject<AlbumSummary> = new Subject<AlbumSummary>();
-    AlbumUpdated  : Subject<AlbumSummary> = new Subject<AlbumSummary>();
+    AlbumAdded: Subject<AlbumSummary> = new Subject<AlbumSummary>();
+    AlbumDeleted: Subject<string> = new Subject<string>();
+    AlbumUpdated: Subject<AlbumSummary> = new Subject<AlbumSummary>();
 
     constructor(private http: Http) {
-        
-        this.images = [
-            new ImageSummary("k1", "Ramsay Eating"),
-            new ImageSummary("k2","Ramsay Crying"),
-            new ImageSummary("k3","Ramsay Pulling Angela's Nose"),
-            new ImageSummary("k4","Ramsay Splashing"),
-            new ImageSummary("k5","Sardines"), 
-            new ImageSummary("k6","We jump in the lake"),
-            new ImageSummary("k7","Getting the metro"),
-            new ImageSummary("k8","Another"),
-            new ImageSummary("k9","Big glass of Port"),
-            new ImageSummary("k10","c"),
-            new ImageSummary("k11","d"),
-            new ImageSummary("k12","e"), 
-            new ImageSummary("k13","f"),
-            new ImageSummary("k14","g"),
-            new ImageSummary("k15","a"),
-            new ImageSummary("k16","b"),
-            new ImageSummary("k17","c"),
-            new ImageSummary("k18","d"),
-            new ImageSummary("k19","e"), 
-            new ImageSummary("k20","f"),
-            new ImageSummary("k21","h"),
-          ];    
-
-        this.albums = [
-            new AlbumSummary("k1", "Porto", "Pictures of Ziggy's birthday trip to Porto", ["k5","k7","k9"]),
-            new AlbumSummary("k2","For Nonna", "Pictures that Aurora will like", ["k2", "k3", "k4"]),
-            new AlbumSummary("k3","Ramsay", "Young Master", ["k1", "k2", "k3", "k4", "k8"])
-        ];
- 
     }
 
-    deleteImage(id : string) : void
-    {
-        let image = this.images.find(s=>s.id === id);
-        this.images = this.images.filter(s=>s.id != id);
-        for(let album of this.albums) {
-            let count = album.imageIds.length;
-            album.imageIds = album.imageIds.filter(s=>s != id);
-            if(album.imageIds.length != count) {
-                this.AlbumUpdated.next(album);
-            }
+    public static buildRoute(suffix: string): URL {
+
+        if (environment.API_ROOT == null) {
+            return new URL(suffix, window.location.origin);
+        } else {
+            return new URL(suffix, environment.API_ROOT);
         }
-            
-        this.ImageDeleted.next(image)
     }
 
-    deleteAlbum(id : string) : void
-    {
-        let album = this.albums.find(s=>s.id === id);
-        this.albums = this.albums.filter(s=>s.id != id);
-        console.log("doing the on next thing");
-        this.AlbumDeleted.next(album);
+    deleteImage(id: string):  Promise<void> {
+        // TODO error handling
+        return this.http.delete(ImageService.buildRoute('api/images/' + id).href).toPromise().then(res => {
+            this.ImageDeleted.next(id);
+        });
     }
 
-    saveAlbum(album : AlbumSummary) : void 
-    {
-
-        this.AlbumUpdated.next(album);
+    deleteAlbum(id: string): Promise<void> {
+        // TODO error handling
+        // TODO utility function to create rest routes
+        return this.http.delete(ImageService.buildRoute('api/albums/' + id).href).toPromise().then(x => {
+            this.AlbumDeleted.next(id);
+        });
     }
 
-    createAlbum(images : ImageSummary[]) : AlbumSummary{
-        var album = new AlbumSummary("k8", "New Album", "", images.map(i=>i.id));
-        this.albums.push(album);
-        return album;
+    updateAlbum(album: AlbumSummary): Promise<void> {
+        return this.http.put(ImageService.buildRoute('api/albums/' + album.id).href, album).toPromise().then(
+            (res) => {
+                this.AlbumUpdated.next(album);
+            },
+            (err) => {
+                console.log('error');
+                // TODO error handling
+            });
     }
 
-    getAlbum(id : string) : AlbumSummary
-    {
-        return this.albums.find(x=>x.id==id);
+    createAlbum(images: ImageSummary[]): Promise<AlbumSummary> {
+        const album: AlbumSummary = {
+            id : 'placeholder',
+            imageIds : images.map(i => i.id),
+            description : '',
+            name : 'New Album',
+            created : new Date(Date.now()),
+            updated : new Date(Date.now())
+        };
+
+        return this.http.post(ImageService.buildRoute('api/albums').href, album).toPromise().then(
+            (res) => {
+                const results: AlbumSummary = JSON.parse(res.text());
+                this.AlbumAdded.next(results);
+                return results;
+            });
     }
 
-    getImage(id : string) : ImageSummary
-    {
-        return this.images.find(x=>x.id==id);
-    }
-
-    getAlbumList(filter : FilterCriteria) : Promise<AlbumSummary[]>
-    {
-        let promise = new Promise<AlbumSummary[]>((resolve, reject) => {
+    getAlbum(id: string): Promise<AlbumSummary> {
+        const promise = new Promise<AlbumSummary>((resolve, reject) => {
             this.http
-                .get("http://localhost:5000/api/albums/")
+                .get(ImageService.buildRoute('api/albums/' + id).href)
                 .toPromise()
-                .then(res =>{
+                .then(res => {
                     console.log(res.json());
-                    let results : AlbumSummary[] = JSON.parse(res.text());
+                    const results: AlbumSummary = JSON.parse(res.text());
                     resolve(results);
                 });
         });
@@ -116,15 +90,36 @@ export class ImageService
         return promise;
     }
 
-    getImageList(filter : FilterCriteria) : Promise<ImageSummary[]>
-    {
-        let promise = new Promise<ImageSummary[]>((resolve, reject) => {
+    getAlbumList(filter: FilterCriteria): Promise<AlbumSummary[]> {
+        const promise = new Promise<AlbumSummary[]>((resolve, reject) => {
             this.http
-                .get("http://localhost:5000/api/images/")
+                .get(ImageService.buildRoute('api/albums/').href)
                 .toPromise()
-                .then(res =>{
+                .then(res => {
                     console.log(res.json());
-                    let results : ImageSummary[] = JSON.parse(res.text());
+                    const results: AlbumSummary[] = JSON.parse(res.text());
+                    resolve(results);
+                });
+        });
+
+        return promise;
+    }
+
+    getImageList(filter: FilterCriteria): Promise<ImageSummary[]> {
+
+        const promise = new Promise<ImageSummary[]>((resolve, reject) => {
+            this.http
+                .get(
+                    // TODO got to be a better way of doing this...
+                    filter.albumId == null ?
+                    ImageService.buildRoute('api/images/').href
+                    :
+                    ImageService.buildRoute('api/images/').href + '?albumId=' + filter.albumId
+                    )
+                .toPromise()
+                .then(res => {
+                    console.log(res.json());
+                    const results: ImageSummary[] = JSON.parse(res.text());
                     resolve(results);
                 });
         });

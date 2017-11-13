@@ -3,6 +3,7 @@ import { NgForm } from "@angular/forms";
 import { UploadSummary, UploadStatus, UploadItem } from "../model/uploadSummary";
 import { UploadService } from "../services/uploadService";
 import { Subscription } from "rxjs/Subscription";
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'image-upload',
@@ -12,10 +13,11 @@ import { Subscription } from "rxjs/Subscription";
 export class ImageUploadComponent implements OnInit, OnDestroy {
 
   private uploadStatus =  UploadStatus;
-  private newUpload : UploadSummary;
-  private uploads : UploadSummary[];
   private subUpload : Subscription;
 
+  uploads : UploadSummary[];
+  newUpload : UploadSummary;
+  
   constructor(private uploadService : UploadService) { }
 
   ngOnInit() {
@@ -35,6 +37,15 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
     }
     this.newUpload = UploadSummary.createNewUpload(fileList);
     
+  }
+
+  getThumbnailURL(item: UploadItem): URL {
+    if (item.summary == null) {
+      return new URL('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
+    }
+    else {
+      return new URL(environment.API_ROOT + item.summary.thumbnail.toString());
+    }
   }
 
   onClose(summary : UploadSummary) : void {

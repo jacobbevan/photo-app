@@ -1,7 +1,6 @@
 import { Component, OnInit, OnChanges, Input, SimpleChanges, OnDestroy } from '@angular/core';
 import { ImageSummary } from '../model/imageSummary';
 import { ImageService } from '../services/imageService';
-import { FilterCriteria} from '../model/filterCriteria';
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 

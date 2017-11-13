@@ -20,7 +20,7 @@ export class AlbumListComponent implements OnInit, OnDestroy {
   
   public updateAlbumList = () =>
   {
-    //TODO error handling
+    // TODO error handling
     this.imageService.getAlbumList(new FilterCriteria()).then(res=>this.albums = res);
   }
   
@@ -29,7 +29,7 @@ export class AlbumListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.updateAlbumList();
-    this.deletedSub = this.imageService.AlbumDeleted.subscribe(a=>this.albums = this.albums.filter(b=> b.id != a.id));    
+    this.deletedSub = this.imageService.AlbumDeleted.subscribe(a=>this.albums = this.albums.filter(b=> b.id != a));    
     this.addedSub = this.imageService.AlbumAdded.subscribe(a=>this.updateAlbumList());
     this.updatedSub = this.imageService.AlbumUpdated.subscribe(a=>this.updateAlbumList());
   }

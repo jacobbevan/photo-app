@@ -4,6 +4,7 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Injectable } from "@angular/core";
 import { Headers, Http, Response } from '@angular/http';
 import { ImageSummary } from "../model/imageSummary";
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class UploadService
@@ -13,7 +14,7 @@ export class UploadService
 
     Added : Subject<UploadSummary> = new Subject<UploadSummary>();
     Updated : Subject<UploadSummary> = new Subject<UploadSummary>();
-    Active : BehaviorSubject<UploadSummary[]> = new BehaviorSubject<UploadSummary[]>([]);    
+    Active : BehaviorSubject<UploadSummary[]> = new BehaviorSubject<UploadSummary[]>([]);
 
 
     constructor(private http: Http) {}
@@ -34,7 +35,6 @@ export class UploadService
 
     }
 
-
     private postImage(http: Http, summary : UploadSummary, index : number) : void  {
 
         let input = new FormData();
@@ -44,9 +44,9 @@ export class UploadService
         input.append("folder", "folder");
 
         item.status = UploadStatus.Ongoing;
-        this.UpdateStatus(summary);        
+        this.UpdateStatus(summary);
         
-        http.post("http://localhost:5000/api", input).toPromise().then(
+        http.post(environment.API_ROOT + 'api/', input).toPromise().then(
             (res ) => {
                 item.status = UploadStatus.Completed;
                 item.summary = JSON.parse(res.text());

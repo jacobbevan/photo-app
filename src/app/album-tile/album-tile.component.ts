@@ -11,7 +11,7 @@ import { Router } from "@angular/router";
 })
 export class AlbumTileComponent implements OnInit {
 
-  @Input("album") private album : AlbumSummary;
+  @Input("album") album : AlbumSummary;
   private images : ImageSummary[];
 
   imageCount() : number
@@ -22,7 +22,9 @@ export class AlbumTileComponent implements OnInit {
   constructor(private router : Router, private imageService : ImageService) { }
 
   ngOnInit() {
-    this.imageService.getImageList({albumId : this.album.id}).then(res=> this.images = res);
+    this.imageService.getImageList({albumId : this.album.id}).then(res => {
+      this.images = res;
+    });
   }
 
   tileSummary(index : number) : ImageSummary {

@@ -35,6 +35,7 @@ export class ImageBrowserComponent implements OnInit {
   }
 
   public updateImageList = () => {
+    console.log('updateimagelist');
     this.imageService.getImageList(this.filter).then(res=>this.images = res);     
   }
 

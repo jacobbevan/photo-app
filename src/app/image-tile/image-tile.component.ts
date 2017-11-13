@@ -5,6 +5,7 @@ import { Subscription } from "rxjs/Subscription";
 import { FormGroup, FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router/router";
 import { ImageService } from "../services/imageService";
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'image-tile',
@@ -18,16 +19,17 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   private subRemoveAll : Subscription;
   private multiEditMode : boolean = false;
   private multiCheckState : boolean = false;
-  private captionEditMode : boolean = false;  
   private isMouseOver : boolean = false;
-  private imageClass : any; //TODO fix up typing here
+  
+  imageClass : any; //TODO fix up typing here
+  captionEditMode : boolean = false;  
   
   @Input('readOnly') readOnly : boolean = false;
   @Input('editVis') editVis : string = "hidden";
   @Input('imageSummary') imageSummary : ImageSummary;
   @Input('showCaption') showCaption : boolean = true;
   
-  private captionGroup : FormGroup;
+  captionGroup : FormGroup;
   private captionInput : FormControl;
 
   constructor(private imageService : ImageService, private multiSelect : MultiSelectService){
@@ -41,9 +43,17 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
       "azb-img-unchecked" : (this.multiEditMode && !this.multiCheckState) && !this.readOnly,
       "azb-img-checked" : (this.multiEditMode && this.multiCheckState) && !this.readOnly
     }
-  } 
+  }
 
-  getEditVis() : string {
+  getThumbnailURL(): URL {
+    return ImageService.buildRoute(this.imageSummary.thumbnail.toString());
+  }
+
+  getFullImageURL(): URL {
+    return ImageService.buildRoute(this.imageSummary.fullImage.toString());
+  }
+
+  getEditVis(): string {
     return this.editVis;
   }
 

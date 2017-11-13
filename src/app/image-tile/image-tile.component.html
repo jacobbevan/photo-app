@@ -8,7 +8,7 @@
                         <button title="View" [ngStyle]="{'visibility': getEditVis()}" (click)="view()" type="button" class="btn btn-default btn-sm">
                             <span class="glyphicon glyphicon-eye-open"></span>
                         </button>
-                        <a title="Download" [ngStyle]="{'visibility': getEditVis()}" type="button" class="btn btn-default btn-sm" download href="http://localhost:5000/{{imageSummary.fullImage}}">
+                        <a title="Download" [ngStyle]="{'visibility': getEditVis()}" type="button" class="btn btn-default btn-sm" download href="{{getFullImageURL()}}">
                             <span class="glyphicon glyphicon-download-alt"></span>
                         </a>
                         <button title="Delete" [ngStyle]="{'visibility': getEditVis()}" (click)="delete()" type="button" class="btn btn-default btn-sm">
@@ -22,7 +22,7 @@
             [ngClass]="imageClass" 
             width="100%"
             height="100%"
-            src="http://localhost:5000/{{imageSummary.thumbnail}}"
+            src="{{getThumbnailURL()}}"
             />            
     </div>
     <div [hidden] ="!showCaption || captionEditMode" class="form-group">

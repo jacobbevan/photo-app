@@ -78,10 +78,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   createNewAlbum() : void {
-    var album = this.imageService.createAlbum(this.multiSelect.Selected);
-    this.router.navigate(["albums/edit", {
-      albumId : album.id 
-    }]);
+    this.imageService.createAlbum(this.multiSelect.Selected).then(a=>{
+      this.router.navigate(["albums/edit", {
+        albumId : a.id 
+      }]);  
+    });
   }
 
   deleteSelected() : void {

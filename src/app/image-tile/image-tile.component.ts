@@ -27,7 +27,7 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   @Input('readOnly') readOnly = false;
   @Input('editVis') editVis = 'hidden';
   @Input('imageSummary') imageSummary: ImageSummary;
-  @Input('showCaption') showCaption: true;
+  @Input('showCaption') showCaption = true;
 
   captionGroup: FormGroup;
   private captionInput: FormControl;
@@ -125,6 +125,7 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   submitCaptionChange(): void {
     this.imageSummary.caption = this.captionInput.value;
     this.captionEditMode = false;
+    this.imageService.updateImage(this.imageSummary);
   }
 
   initialiseMultiSelect(): void {

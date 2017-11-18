@@ -1,8 +1,8 @@
 import { Component, OnInit, OnChanges, Input, SimpleChanges, OnDestroy } from '@angular/core';
 import { ImageSummary } from '../model/imageSummary';
 import { ImageService } from '../services/imageService';
-import { ActivatedRoute } from "@angular/router";
-import { Subscription } from "rxjs/Subscription";
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'image-list',
@@ -11,41 +11,38 @@ import { Subscription } from "rxjs/Subscription";
 })
 export class ImageListComponent implements OnInit, OnChanges  {
 
-  private columnCount : number = 6;
-  private rowCount : number = 0;
-  
-  @Input('large') large : boolean = false
-  @Input('images') images : ImageSummary[] = []; 
-  @Input('rowIndexes') rowIndexes : number[] = [];
-  @Input('columnIndexes') columnIndexes : number[] = [];
-  @Input('colClass') colClass : string;
-  
+  private columnCount = 6;
+  private rowCount = 0;
+
+  @Input('large') large = false;
+  @Input('images') images: ImageSummary[] = [];
+  @Input('rowIndexes') rowIndexes: number[] = [];
+  @Input('columnIndexes') columnIndexes: number[] = [];
+  @Input('colClass') colClass: string;
+
   constructor() {
   }
 
-  tileExists(row : number, col : number) : boolean
-  {
+  tileExists(row: number, col: number): boolean {
     return row * this.columnCount + col < this.images.length;
   }
-  
-  tileSummary(row : number, col : number) : ImageSummary
-  {
+
+  tileSummary(row: number, col: number): ImageSummary {
     return this.images[row * this.columnCount + col];
   }
 
   public  updateLayout = () => {
 
-    if(this.large) {
-      this.columnCount = 3;
-      this.colClass = "col-sm-4"
-    }
-    else{
+    if (this.large) {
+      this.columnCount = 2;
+      this.colClass = 'col-xs-6';
+    } else {
       this.columnCount = 6;
-      this.colClass = "col-sm-2"
+      this.colClass = 'col-xs-2';
     }
 
     this.rowCount = 1 + (this.images.length - this.images.length % this.columnCount) / this.columnCount;
-    
+
     this.rowIndexes = Array.apply(null, {length : this.rowCount}).map(Function.call, Number);
     this.columnIndexes = Array.apply(null, {length : this.columnCount}).map(Function.call, Number);
   }
@@ -53,8 +50,8 @@ export class ImageListComponent implements OnInit, OnChanges  {
   ngOnInit() {
     this.updateLayout();
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
-    this.updateLayout();    
-  } 
+    this.updateLayout();
+  }
 }

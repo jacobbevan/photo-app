@@ -16,6 +16,7 @@ import { AlbumEditComponent } from './album-edit/album-edit.component';
 import { ImageBrowserComponent } from './image-browser/image-browser.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { UploadService } from './services/uploadService';
+import { AlertModule} from 'ngx-bootstrap';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -42,7 +43,8 @@ const routes: Routes = [
     HttpModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(routes, {useHash: true})
+    RouterModule.forRoot(routes, {useHash: true}),
+    AlertModule.forRoot()
   ],
   providers: [
     ImageService,

@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 import { ImageSummary } from '../model/imageSummary';
 import { environment } from '../../environments/environment';
+import { ImageService } from './imageService';
 
 @Injectable()
 export class UploadService {
@@ -44,7 +45,7 @@ export class UploadService {
         item.status = UploadStatus.Ongoing;
         this.UpdateStatus(summary);
 
-        http.post(environment.API_ROOT + 'api/', input).toPromise().then(
+        http.post(ImageService.buildRoute('api/upload/').href, input).toPromise().then(
             (res ) => {
                 item.status = UploadStatus.Completed;
                 item.summary = JSON.parse(res.text());

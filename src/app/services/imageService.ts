@@ -57,6 +57,17 @@ export class ImageService {
             });
     }
 
+    updateImage(image: ImageSummary): Promise<void> {
+        return this.http.put(ImageService.buildRoute('api/images/' + image.id).href, image).toPromise().then(
+            (res) => {
+                this.ImageUpdated.next(image);
+            },
+            (err) => {
+                console.log('error');
+                // TODO error handling
+            });
+    }
+
     createAlbum(images: ImageSummary[]): Promise<AlbumSummary> {
         const album: AlbumSummary = {
             id : 'placeholder',

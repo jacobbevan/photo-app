@@ -3,7 +3,7 @@ import { ReactiveFormsModule, FormsModule, FormGroup, FormControl } from '@angul
 import { FilterCriteria} from '../model/filterCriteria';
 import { MultiSelectService} from '../services/multiSelectService';
 import { Subscription } from 'rxjs/Subscription';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { ImageService } from '../services/imageService';
 import { AlbumSummary } from '../model/albumSummary';
 import { ImageSummary } from '../model/imageSummary';
@@ -18,11 +18,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private subAdded: Subscription;
   private subRemoved: Subscription;
   private subRemoveAll: Subscription;
-  private large = false;
+  private large = true;
   private filter: FilterCriteria = new FilterCriteria();
 
-  showMultiButtons = false;
+  isCollapsed = true;
 
+  showMultiButtons = false;
+  title = 'AZB Photos';
   searchGroup: FormGroup;
   searchText: FormControl;
 
@@ -30,7 +32,28 @@ export class NavigationComponent implements OnInit, OnDestroy {
   multiCheck: FormControl;
   multiSelectCount = 0;
 
-  constructor(private router: Router, private multiSelect: MultiSelectService, private imageService: ImageService) { }
+  constructor(private router: Router, private multiSelect: MultiSelectService, private imageService: ImageService) {
+    router.events.subscribe (event => {
+        console.log(event);
+        if (event instanceof NavigationStart ) {
+          const ns = <NavigationStart> event;
+          console.log(ns.url);
+          // TODO lookup table
+          if (ns.url.startsWith('/images')) {
+            this.title = 'AZB Images';
+            return;
+          }
+          if (ns.url.startsWith('/albums')) {
+            this.title = 'AZB Albums';
+            return;
+          }
+          if (ns.url.startsWith('/upload')) {
+            this.title = 'AZB Image Upload';
+            return;
+          }
+        }
+    });
+  }
 
   ngOnInit() {
     this.initialiseSearch();
@@ -57,12 +80,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
     );
   }
 
+  toggleCollapse(): void {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
   onSearch(): void {
     this.filter = { albumName : this.searchText.value};
     this.showImages();
   }
 
   showImages(): void {
+    this.isCollapsed = true;
     this.router.navigate(['images', {
       large : this.large,
       filter : JSON.stringify(this.filter)
@@ -70,10 +98,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   showAlbums(): void {
+    this.isCollapsed = true;
     this.router.navigate(['albums']);
   }
 
   showUpload(): void {
+    this.isCollapsed = true;
     this.router.navigate(['upload']);
   }
 

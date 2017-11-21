@@ -11,9 +11,18 @@
                         <a title="Download" [ngStyle]="{'visibility': getEditVis()}" type="button" class="btn btn-default btn-sm" download href="{{getFullImageURL()}}">
                             <span class="glyphicon glyphicon-download-alt"></span>
                         </a>
-                        <button title="Delete" [ngStyle]="{'visibility': getEditVis()}" (click)="delete()" type="button" class="btn btn-default btn-sm">
+                        <button title="Delete" [ngStyle]="{'visibility': getEditVis()}" (click)="delete(deleteTemplate)" type="button" class="btn btn-default btn-sm">
                             <span class="glyphicon glyphicon-trash"></span>
                         </button>
+
+                        <ng-template #deleteTemplate>
+                          <div class="modal-body text-center">
+                            <p>Delete image?</p>
+                            <button type="button" class="btn btn-default" (click)="confirmDelete()" >Yes</button>
+                            <button type="button" class="btn btn-primary" (click)="cancelDelete()" >No</button>
+                          </div>
+                        </ng-template>                        
+                        
                     </div>
                 </div>
             </div>

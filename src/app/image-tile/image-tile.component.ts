@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges, TemplateRef} from '@angular/core';
 import { ImageSummary } from '../model/imageSummary';
 import { MultiSelectService } from '../services/multiSelectService';
 import { Subscription } from 'rxjs/Subscription';
@@ -6,6 +6,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router/router';
 import { ImageService } from '../services/imageService';
 import { environment } from '../../environments/environment';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 @Component({
   selector: 'image-tile',
@@ -20,6 +22,7 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   private multiEditMode = false;
   private multiCheckState = false;
   private isMouseOver = false;
+  private modalRef: BsModalRef;
 
   imageClass: any; // TODO fix up typing here
   captionEditMode = false;
@@ -32,7 +35,7 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   captionGroup: FormGroup;
   private captionInput: FormControl;
 
-  constructor(private imageService: ImageService, private multiSelect: MultiSelectService) {
+  constructor(private imageService: ImageService, private multiSelect: MultiSelectService, private modalService: BsModalService) {
   }
 
   setImageClass(): void {
@@ -65,8 +68,17 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
     el.focus();
   }
 
-  delete(): void {
+  delete(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  }
+
+  confirmDelete(): void {
+    this.modalRef.hide();
     this.imageService.deleteImage(this.imageSummary.id);
+  }
+
+  cancelDelete(): void {
+    this.modalRef.hide();
   }
 
   imageClick(): void {
@@ -154,4 +166,6 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
     this.subRemoveAll.unsubscribe();
     this.subRemoved.unsubscribe();
   }
+
+
 }

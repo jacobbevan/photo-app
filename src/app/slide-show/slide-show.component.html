@@ -1,0 +1,10 @@
+<div class="container">
+  <carousel>
+    <slide *ngFor="let image of images">
+        <img [src]="getFullImageURL(image)" alt="xxx" style="display: block; width: 100%;">
+        <div class="carousel-caption">
+          <h3>{{image.caption}}</h3>
+        </div>
+    </slide>      
+  </carousel>
+</div>

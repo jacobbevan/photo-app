@@ -17,12 +17,16 @@ import { ImageBrowserComponent } from './image-browser/image-browser.component';
 import { ImageUploadComponent } from './image-upload/image-upload.component';
 import { UploadService } from './services/uploadService';
 import { AlertModule} from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { SlideShowComponent } from './slide-show/slide-show.component';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'images', component: ImageBrowserComponent},
   {path: 'albums', component: AlbumListComponent},
   {path: 'albums/edit', component: AlbumEditComponent},
+  {path: 'albums/show', component: SlideShowComponent},
   {path: 'upload', component: ImageUploadComponent}
 ];
 
@@ -36,7 +40,8 @@ const routes: Routes = [
     AlbumListComponent,
     AlbumEditComponent,
     ImageBrowserComponent,
-    ImageUploadComponent
+    ImageUploadComponent,
+    SlideShowComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +49,9 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes, {useHash: true}),
-    AlertModule.forRoot()
+    AlertModule.forRoot(),
+    ModalModule.forRoot(),
+    CarouselModule.forRoot()
   ],
   providers: [
     ImageService,

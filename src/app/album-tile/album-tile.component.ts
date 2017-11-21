@@ -38,7 +38,9 @@ export class AlbumTileComponent implements OnInit {
   }
 
   viewAlbum(): void {
-    console.log('not yet implemented');
+    this.router.navigate(['albums/show', {
+      albumId : this.album.id
+    }]);
   }
 
   deleteAlbum(): void {

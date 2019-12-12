@@ -17,7 +17,7 @@ export class SlideShowComponent implements OnInit {
   constructor(private imageService: ImageService, private route: ActivatedRoute) { }
 
   getFullImageURL(imageSummary: ImageSummary): URL {
-    return ImageService.buildRoute(imageSummary.fullImage.toString());
+      return imageSummary._links.image.href;
   }
 
   ngOnInit() {
@@ -25,7 +25,7 @@ export class SlideShowComponent implements OnInit {
       if (p['albumId']) {
           this.imageService.getAlbum(p['albumId']).then(album => {
             this.album = album;
-            this.imageService.getImageList({albumId : album.id}).then(res => this.images = res);
+            this.imageService.getImageList({albumId : album.id}).then(res => this.images = res.records);
             });
         }
       }

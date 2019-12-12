@@ -48,11 +48,11 @@ export class ImageTileComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getThumbnailURL(): URL {
-    return ImageService.buildRoute(this.imageSummary.thumbnail.toString());
+    return this.imageSummary._links.thumb.href;
   }
 
   getFullImageURL(): URL {
-    return ImageService.buildRoute(this.imageSummary.fullImage.toString());
+    return this.imageSummary._links.image.href;
   }
 
   getEditVis(): string {

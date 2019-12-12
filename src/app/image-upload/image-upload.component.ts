@@ -44,7 +44,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
     if (item.summary == null) {
       return new URL('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
     } else {
-      return new URL(environment.API_ROOT + item.summary.thumbnail.toString());
+      return item.summary._links.thumb.href;
     }
   }
 

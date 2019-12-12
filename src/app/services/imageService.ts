@@ -1,4 +1,4 @@
-import {ImageSummary} from '../model/imageSummary';
+import {ImageSummary, QueryResult} from '../model/imageSummary';
 import {AlbumSummary} from '../model/albumSummary';
 import {FilterCriteria} from '../model/filterCriteria';
 import {Observable} from 'rxjs/Observable';
@@ -32,6 +32,8 @@ export class ImageService {
     }
 
     deleteImage(id: string):  Promise<void> {
+        console.log("deleteImage");
+
         // TODO error handling
         return this.http.delete(ImageService.buildRoute('api/images/' + id).href).toPromise().then(res => {
             this.ImageDeleted.next(id);
@@ -39,6 +41,8 @@ export class ImageService {
     }
 
     deleteAlbum(id: string): Promise<void> {
+        console.log("deleteAlbum");
+
         // TODO error handling
         // TODO utility function to create rest routes
         return this.http.delete(ImageService.buildRoute('api/albums/' + id).href).toPromise().then(x => {
@@ -47,6 +51,8 @@ export class ImageService {
     }
 
     updateAlbum(album: AlbumSummary): Promise<void> {
+        console.log("updateAlbum");
+
         return this.http.put(ImageService.buildRoute('api/albums/' + album.id).href, album).toPromise().then(
             (res) => {
                 this.AlbumUpdated.next(album);
@@ -58,6 +64,8 @@ export class ImageService {
     }
 
     updateImage(image: ImageSummary): Promise<void> {
+        console.log("updateImage");
+
         return this.http.put(ImageService.buildRoute('api/images/' + image.id).href, image).toPromise().then(
             (res) => {
                 this.ImageUpdated.next(image);
@@ -69,6 +77,7 @@ export class ImageService {
     }
 
     createAlbum(images: ImageSummary[]): Promise<AlbumSummary> {
+        console.log("createAlbum");
         const album: AlbumSummary = {
             id : 'placeholder',
             imageIds : images.map(i => i.id),
@@ -87,12 +96,12 @@ export class ImageService {
     }
 
     getAlbum(id: string): Promise<AlbumSummary> {
+        console.log("getAlbum");
         const promise = new Promise<AlbumSummary>((resolve, reject) => {
             this.http
                 .get(ImageService.buildRoute('api/albums/' + id).href)
                 .toPromise()
                 .then(res => {
-                    console.log(res.json());
                     const results: AlbumSummary = JSON.parse(res.text());
                     resolve(results);
                 });
@@ -102,12 +111,12 @@ export class ImageService {
     }
 
     getAlbumList(filter: FilterCriteria): Promise<AlbumSummary[]> {
+        console.log("getAlbumList");
         const promise = new Promise<AlbumSummary[]>((resolve, reject) => {
             this.http
                 .get(ImageService.buildRoute('api/albums/').href)
                 .toPromise()
                 .then(res => {
-                    console.log(res.json());
                     const results: AlbumSummary[] = JSON.parse(res.text());
                     resolve(results);
                 });
@@ -116,21 +125,18 @@ export class ImageService {
         return promise;
     }
 
-    getImageList(filter: FilterCriteria): Promise<ImageSummary[]> {
+    getImageList(filter: FilterCriteria): Promise<QueryResult<ImageSummary>> {
 
-        const promise = new Promise<ImageSummary[]>((resolve, reject) => {
+
+        const queryString = Object.keys(filter).map(key => key + '=' + filter[key]).join('&');
+        const url = ImageService.buildRoute('api/images/').href + "?" + queryString;
+        console.log(url);
+        const promise = new Promise<QueryResult<ImageSummary>>((resolve, reject) => {
             this.http
-                .get(
-                    // TODO got to be a better way of doing this...
-                    filter.albumId == null ?
-                    ImageService.buildRoute('api/images/').href
-                    :
-                    ImageService.buildRoute('api/images/').href + '?albumId=' + filter.albumId
-                    )
+                .get(url)
                 .toPromise()
                 .then(res => {
-                    console.log(res.json());
-                    const results: ImageSummary[] = JSON.parse(res.text());
+                    const results: QueryResult<ImageSummary> = JSON.parse(res.text());
                     resolve(results);
                 });
         });

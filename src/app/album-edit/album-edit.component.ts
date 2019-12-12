@@ -28,7 +28,7 @@ export class AlbumEditComponent implements OnInit {
       if (p['albumId']) {
           this.imageService.getAlbum(p['albumId']).then(album => {
             this.album = album;
-            this.imageService.getImageList({albumId : album.id}).then(res => this.images = res);
+            this.imageService.getImageList({albumId : album.id}).then(res => this.images = res.records);
             this.albumName.setValue(this.album.name);
             this.albumDesc.setValue(this.album.description);
             });

@@ -8,8 +8,8 @@
                         <button title="View" [ngStyle]="{'visibility': getEditVis()}" (click)="view()" type="button" class="btn btn-default btn-sm">
                             <span class="glyphicon glyphicon-eye-open"></span>
                         </button>
-                        <a title="Download" [ngStyle]="{'visibility': getEditVis()}" type="button" class="btn btn-default btn-sm" download href="{{getFullImageURL()}}">
-                            <span class="glyphicon glyphicon-download-alt"></span>
+                        <a title="Download" [ngStyle]="{'visibility': getEditVis()}" type="button" class="btn btn-default btn-sm" download href="{{getFullImageURL()}}" target="_blank">
+                            <span class="glyphicon glyphicon-download-alt" ></span>
                         </a>
                         <button title="Delete" [ngStyle]="{'visibility': getEditVis()}" (click)="delete(deleteTemplate)" type="button" class="btn btn-default btn-sm">
                             <span class="glyphicon glyphicon-trash"></span>

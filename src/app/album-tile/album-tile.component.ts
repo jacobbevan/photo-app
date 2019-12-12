@@ -22,7 +22,7 @@ export class AlbumTileComponent implements OnInit {
 
   ngOnInit() {
     this.imageService.getImageList({albumId : this.album.id}).then(res => {
-      this.images = res;
+      this.images = res.records;
     });
   }
 

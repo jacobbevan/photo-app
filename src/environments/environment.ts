@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  API_ROOT : 'http://localhost:5000/'
+  API_ROOT : 'http://localhost:8080/'
 };

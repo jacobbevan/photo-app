@@ -15,7 +15,7 @@ export class ImageBrowserComponent implements OnInit, OnDestroy {
   private filter: FilterCriteria = new FilterCriteria();
   private addedSub: Subscription;
   private deletedSub: Subscription;
-
+  
   @Input() public images: ImageSummary[];
   @Input() public large = false;
 
@@ -37,7 +37,21 @@ export class ImageBrowserComponent implements OnInit, OnDestroy {
   }
 
   public updateImageList = () => {
-    this.imageService.getImageList(this.filter).then(res => this.images = res);
+    this.imageService.getImageList(this.filter).then(res => {
+      this.filter.startKey = res.nextStartKey;
+      if(this.images == null) {
+        this.images = res.records;
+      }
+      else {
+        console.log(res.records);        
+        this.images = this.images.concat(res.records);
+      }
+    });
+  }
+
+  public showMore = () => {
+    console.log("show more");
+    this.updateImageList();
   }
 
   ngOnInit() {

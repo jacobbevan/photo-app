@@ -2,10 +2,9 @@ export class ImageSummary {
 
     id: string;
     caption: string;
-    thumbnail: URL;
-    fullImage: URL;
     created: Date;
     updated: Date;
+    _links: Links;
 
     constructor(id: string, caption: string) {
         this.id = id;
@@ -13,4 +12,19 @@ export class ImageSummary {
         this.created = new Date(Date.now());
         this.updated = this.created;
     }
+}
+
+export class Links {
+    thumb : Link;
+    image : Link;
+}
+
+export class Link {
+    href: URL;
+}
+
+export class QueryResult<T> {
+    records: ImageSummary[];
+    next: Link;
+    nextStartKey : string;
 }
